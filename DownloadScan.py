@@ -17,6 +17,7 @@
 
 import requests
 import os
+import argparse
 from bs4 import BeautifulSoup
 import time
 
@@ -24,22 +25,27 @@ def getImage():
     pass
 
 def downloadSource(URL):
-    sourcecode = requests.get(url=URL, timeout=(3,7))
+    sourcecode = requests.get(url=URL)
     return sourcecode
 
 def main():
 
-    URL="http://www.mangahere.cc/manga/abara/c001/"
-    soup = BeautifulSoup(downloadSource(URL).content, 'html5lib')
-    srcImage = soup.find('img', id="image")["src"]
+    parser  = argparse.ArgumentParser(description="DownloadScan - download scan from http://www.mangahere.cc/")
+    parser.add_argument('-link', '-l', help="Link to the scan", required=True)
+    parser.add_argument('-nos', '-n', help="number of page", required=True)
+    args        = parser.parse_args()
+    link        = args.link
+    numberpage  = int(args.nos)+1
+    #URL="http://www.mangahere.cc/manga/abara/c001/"
+    soup = BeautifulSoup(downloadSource(link).content, 'html5lib')
+    srcimage = soup.find('img', id="image")["src"]
     ##print srcImage
-    os.system("cd ~/Scripts/Scan/Abara1/ && wget -c -nv '{:s}'".format(srcImage))
-    for i in range(2, 41):
+    os.system("cd ~/Path/to/Scan/ && wget -c -nv '{0:s}' -O {1:s}.jpg".format(srcimage, '1'))
+    for i in range(2, numberpage):
         #print URL+str(i)+".html"
-        soup = BeautifulSoup(downloadSource(URL+str(i)+".html").content, 'html5lib')
-        srcImage = soup.find('img', id="image")["src"]
-        print "cd ~/Scripts/Scan/Abara1/ && wget -c '{:s}'".format(srcImage)
-        os.system("cd ~/Scripts/Scan/Abara1/ && wget -c -nv '{:s}'".format(srcImage))
+        soup = BeautifulSoup(downloadSource(link+str(i)+".html").content, 'html5lib')
+        srcimage = soup.find('img', id="image")["src"]
+        os.system("cd ~/Path/to/Scan/ && wget -c -nv '{0:s}' -O {1:s}.jpg".format(srcimage, str(i)))
 
 
 if __name__ == '__main__':
