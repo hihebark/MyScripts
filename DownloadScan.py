@@ -33,19 +33,21 @@ def main():
     parser  = argparse.ArgumentParser(description="DownloadScan - download scan from http://www.mangahere.cc/")
     parser.add_argument('-link', '-l', help="Link to the scan", required=True)
     parser.add_argument('-nos', '-n', help="number of page", required=True)
+    parser.add_argument('-path', '-p', help="path to save the scan")
     args        = parser.parse_args()
     link        = args.link
     numberpage  = int(args.nos)+1
+    path        = args.path
     #URL="http://www.mangahere.cc/manga/abara/c001/"
     soup = BeautifulSoup(downloadSource(link).content, 'html5lib')
     srcimage = soup.find('img', id="image")["src"]
     ##print srcImage
-    os.system("cd ~/Path/to/Scan/ && wget -c -nv '{0:s}' -O {1:s}.jpg".format(srcimage, '1'))
+    os.system("cd '{0:s}' && wget -c -nv '{1:s}' -O {2:s}.jpg".format(path, srcimage, '1'))
     for i in range(2, numberpage):
         #print URL+str(i)+".html"
         soup = BeautifulSoup(downloadSource(link+str(i)+".html").content, 'html5lib')
         srcimage = soup.find('img', id="image")["src"]
-        os.system("cd ~/Path/to/Scan/ && wget -c -nv '{0:s}' -O {1:s}.jpg".format(srcimage, str(i)))
+        os.system("cd '{0:s}' && wget -c -nv '{1:s}' -O {2:s}.jpg".format(path, srcimage, str(i)))
 
 
 if __name__ == '__main__':
