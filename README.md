@@ -10,3 +10,5 @@ Scripts
 **updategitre.sh** update "pull" every git project.
 
 **flacandmp4tomp3** convertor not mine.
+
+**reshell.txt** List of reverse shell.
